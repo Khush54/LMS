@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>LOGIN/SIGNUP</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="flip-box" id="flip-box">
+            <div class="box active" id="student-login">
+                <form action="" method="post">
+                    <h2>Student LogIn</h2>
+                    <input type="text" name="student-username" placeholder="Username" />
+                    <input type="password" name="student-password" placeholder="Password" />
+                    <button type="submit" name="student-login">LogIn</button>
+                    <p>Are you an Admin?<a href="#" onclick="show('admin-login','horizontal')">Admin LogIn</a></p>
+                </form>
+            </div>
+            <div class="box" id="admin-login">
+                <form action="" method="post">
+                    <h2>Admin LogIn</h2>
+                    <input type="text" name="admin-username" placeholder="Username" />
+                    <input type="password" name="admin-password" placeholder="Password" />
+                    <button type="submit" name="admin-login">LogIn</button>
+                    <p>Don't have an Account?<a href="#" onclick="show('admin-signup','vertical')">Admin SignUp</a></p>
+                    <p>Are you a Student ?<a href="#" onclick="show('student-login','horizontal')">Student Login</a></p>
+                </form>
+            </div>
+            <div class="box" id="admin-signup">
+                <form action="" method="post">
+                    <h2>Admin SignUp</h2>
+                    <input type="text" name="admin-id" placeholder="UniqueID" />
+                    <input type="password" name="password" placeholder="Password" />
+                    <input type="password" name="confirm-password" placeholder="Confirm Password" />
+                    <button type="submit" name="admin-signup">Register</button>
+                    <p>Already have an Account?<a href="#" onclick="show('admin-login','horizontal')">Admin LogIn</a></p>
+                    <p>Are you a Student ?<a href="#" onclick="show('student-login','horizontal')">Student Login</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

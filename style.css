@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+    color: rgb(48, 48, 48);
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    perspective: 1500px; 
+    overflow: hidden;
+    position: relative;
+}
+
+.flip-box {
+    position: relative;
+    width: 100%;
+    
+}
+
+.box {
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backface-visibility: hidden;
+    opacity: 0;
+    transform: rotateY(180deg);
+    transition: transform 2s ease-in-out,opacity 2s ease-in-out;
+    transform-style: preserve-3d;
+    transform-origin: center center;
+}
+
+.box.active {
+    position: relative;
+    opacity: 1;
+    transform: rotateY(0deg);
+    z-index: 1;
+}
+
+.flip-horizontal .box {
+    transform: rotateY(180deg);
+}
+.flip-horizontal .box.active {
+    transform: rotateY(0deg);
+}
+
+.flip-vertical .box {
+    transform: rotateX(180deg);
+}
+.flip-vertical .box.active {
+    transform: rotateX(0deg);
+}
+ 
+
+h2 {
+    font-size: 34px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    background: rgb(244, 238, 238);
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    font-size: 16px;
+    color: rgb(48, 48, 48);
+    margin-bottom: 22px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: rgb(151, 60, 236);
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    color: white;
+    font-weight: 500;
+    margin-bottom: 22px;
+    transition: 0.5s;
+}
+
+button:hover {
+    background: rgb(115, 48, 178);
+}
+
+p {
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+p a {
+    color: rgb(151, 60, 236);
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 500px) {
+    .container {
+        max-width: 90%;
+        height: auto;
+    }
+    .box {
+        height: auto;
+        padding: 25px 20px;
+    }
+}
