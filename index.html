@@ -1,3 +1,10 @@
+<?php
+if (isset($_GET['msg'])) {
+    echo "<div style='color: green; padding: 10px; text-align: center; background: #e0ffe0; border: 1px solid green; border-radius: 5px;'>
+            ✅ " . htmlspecialchars($_GET['msg']) . "
+          </div>";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,22 +28,23 @@
                 </form>
             </div>
             <div class="box" id="admin-login">
-                <form action="" method="post">
+                <form action="login_admin.php" method="post">
                     <h2>Admin LogIn</h2>
-                    <input type="text" name="admin-username" placeholder="Username" />
-                    <input type="password" name="admin-password" placeholder="Password" />
+                    <input type="text" name="admin-name" placeholder="Username / Email" required />
+                    <input type="password" name="password" placeholder="Password" required />
                     <button type="submit" name="admin-login">LogIn</button>
                     <p>Don't have an Account?<a href="#" onclick="show('admin-signup','vertical')">Admin SignUp</a></p>
                     <p>Are you a Student ?<a href="#" onclick="show('student-login','horizontal')">Student Login</a></p>
                 </form>
             </div>
             <div class="box" id="admin-signup">
-                <form action="" method="post">
+                <form action="signup.php" method="post">
                     <h2>Admin SignUp</h2>
-                    <input type="text" name="admin-id" placeholder="UniqueID" />
-                    <input type="password" name="password" placeholder="Password" />
-                    <input type="password" name="confirm-password" placeholder="Confirm Password" />
-                    <button type="submit" name="admin-signup">Register</button>
+                    <input type="text" name="admin-name" placeholder="Name" required/>
+                    <input type="text" name="admin-id" placeholder="ID"  required pattern=".{10,10}" maxlength="10" title="Please enter exactly 10 characters"/>
+                    <input type="email" name="admin-email" placeholder="E-mail" required />
+                    <input type="text" name="password" placeholder="Password" required pattern=".{8,8}" maxlength="8" title="Please enter exactly 8 characters"/>
+                    <button type="submit" name="admin-signup">Register</button> 
                     <p>Already have an Account?<a href="#" onclick="show('admin-login','horizontal')">Admin LogIn</a></p>
                     <p>Are you a Student ?<a href="#" onclick="show('student-login','horizontal')">Student Login</a></p>
                 </form>
