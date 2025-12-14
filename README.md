@@ -50,4 +50,5 @@ git clone <repo-url>
 ---
 
 ## Co-Authored By:
+- Khushpreet Kaur (https://github.com/Khush54)
 - Sahid Alam (https://github.com/Sahid934)
