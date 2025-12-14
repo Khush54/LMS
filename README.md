@@ -25,7 +25,7 @@ fast iframe navigation – works perfectly on any device.
 
 ## 🎯 Quick Start (5 Minutes!)
 bash
-git clone <your-repo-url>
+git clone <repo-url>
 1. Fire up XAMPP → Apache + MySQL
 2. phpMyAdmin: Create 'librarydb' → Import /db/schema.sql
 3. Drop files in htdocs/lms/ → http://localhost/lms/
@@ -46,3 +46,8 @@ git clone <your-repo-url>
 - Cloud Deployment (AWS/Heroku) + E-Book Library 📱
 - Analytics Dashboard – track most-borrowed books & trends 📊
 - Multi-Library Support for campus-wide networks 🌐
+
+---
+
+## Co-Authored By:
+- Sahid Alam (https://github.com/Sahid934)
