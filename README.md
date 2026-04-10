@@ -22,7 +22,7 @@
 ## 🛠 Tech Stack
 
 - Frontend: 	HTML5, CSS3, JS, Bootstrap 5 (responsive magic)
-- Backend: 	PHP + MySQLi (secure server logic)
+- Backend: 	PHP (secure server logic)
 - Database: 	MySQL (7 normalized tables for scalability)
 - Dev Tools: 	XAMPP, VS Code, phpMyAdmin
 - Deployment: Infinity Free App
@@ -31,14 +31,13 @@
 
 
 ## 🌟 Epic Future Upgrades
-- Barcode/RFID Scanning for instant check-ins 🔍
-- SMS/Email Alerts for due dates & fines 💬
-- Cloud Deployment (AWS/Heroku) + E-Book Library 📱
-- Analytics Dashboard – track most-borrowed books & trends 📊
-- Multi-Library Support for campus-wide networks 🌐
+- Barcode/RFID Scanning for instant check-ins 
+- SMS/Email Alerts for due dates & fines 
+- Analytics Dashboard – track most-borrowed books & trends 
+- Multi-Library Support for campus-wide networks 
 
 ---
 
 ## Co-Authored By:
-- Khushpreet Kaur (https://github.com/Khush54)
 - Sahid Alam (https://github.com/Sahid934)
+- Khushpreet Kaur (https://github.com/Khush54)
