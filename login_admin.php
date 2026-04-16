@@ -1,44 +1,80 @@
 <?php
 session_start();
-
 include("config.php");
 
+if (isset($_POST['admin-login'])) {
 
-$user_input = $_POST['admin-name']; // Can be name or email
-$password = $_POST['password'];     // Plain password
+    $user_input = trim($_POST['admin-name']); 
+    $password = trim($_POST['password']);
+    $sql = "SELECT * FROM admindetails WHERE Email = ? OR ID = ?";
+    $stmt = $connection->prepare($sql);
 
-$sql = "SELECT * FROM admindetails WHERE Email = ? OR Name = ?";
-$stmt = $connection->prepare($sql);
-$stmt->bind_param("ss", $user_input, $user_input);
-$stmt->execute();
-$result = $stmt->get_result();
+    if (!$stmt) {
+        die("Query Failed: " . $connection->error);
+    }
 
-if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
+    $stmt->bind_param("ss", $user_input, $user_input);
+    $stmt->execute();
 
-    if ($password === $row['Password']) {
-        $_SESSION['admin_name'] = $row['Name'];
-        echo "
-        <html>
-        <head>
-            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        </head>
-        <body>
-        <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Login Successful!',
-            text: 'Welcome, " . addslashes($row['Name']) . "',
-            confirmButtonText: 'OK',
-            backdrop: false
-        }).then(() => {
-            window.location.href = 'home.html';
-        });
-        </script>
-        </body>
-        </html>
-        ";
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+
+        $row = $result->fetch_assoc();
+        if ($password === $row['Password']) {
+
+            // Store session
+            $_SESSION['admin_id'] = $row['ID'];
+            $_SESSION['admin_name'] = $row['Name'];
+            $_SESSION['admin_email'] = $row['Email'];
+
+            echo "
+            <html>
+            <head>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            </head>
+            <body>
+            <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful 🎉',
+                text: 'Welcome, " . addslashes($row['Name']) . "!',
+                confirmButtonText: 'Continue'
+            }).then(() => {
+                window.location.href = 'home.html';
+            });
+            </script>
+            </body>
+            </html>
+            ";
+            exit();
+
+        } else {
+
+            echo "
+            <html>
+            <head>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            </head>
+            <body>
+            <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Wrong Password ❌',
+                text: 'Please enter the correct password.',
+                confirmButtonText: 'Try Again'
+            }).then(() => {
+                window.location.href = 'index.html';
+            });
+            </script>
+            </body>
+            </html>
+            ";
+            exit();
+        }
+
     } else {
+
         echo "
         <html>
         <head>
@@ -47,11 +83,10 @@ if ($result->num_rows === 1) {
         <body>
         <script>
         Swal.fire({
-            icon: 'error',
-            title: 'Incorrect Password!',
-            text: 'Please try again.',
-            confirmButtonText: 'OK',
-            backdrop: false
+            icon: 'warning',
+            title: 'Admin Not Found ⚠️',
+            text: 'No account found with this Email or ID.',
+            confirmButtonText: 'OK'
         }).then(() => {
             window.location.href = 'index.html';
         });
@@ -59,30 +94,11 @@ if ($result->num_rows === 1) {
         </body>
         </html>
         ";
+        exit();
     }
-} else {
-    echo "
-    <html>
-    <head>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-    </head>
-    <body>
-    <script>
-    Swal.fire({
-        icon: 'error',
-        title: 'No Account Found!',
-        text: 'No account matches this Email or Name.',
-        confirmButtonText: 'OK',
-        backdrop: false
-    }).then(() => {
-        window.location.href = 'index.html';
-    });
-    </script>
-    </body>
-    </html>
-    ";
+
+    $stmt->close();
 }
 
-$stmt->close();
 $connection->close();
 ?>

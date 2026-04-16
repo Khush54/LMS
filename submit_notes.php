@@ -1,25 +1,27 @@
 <?php
-// connect to DB (change your credentials here)
 include("config.php");
 
-// Function to show SweetAlert2 popup and redirect back or elsewhere
 function alertAndRedirect($icon, $title, $text, $redirect = null) {
     $redirectJS = $redirect ? "window.location.href = '$redirect';" : "window.history.back();";
     echo "
     <html>
     <head>
+        <link rel='preconnect' href='https://cdn.jsdelivr.net'>
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     </head>
     <body>
     <script>
-        Swal.fire({
-            icon: '$icon',
-            title: '$title',
-            text: '$text',
-            confirmButtonText: 'OK',
-            backdrop: false
-        }).then(() => {
-            $redirectJS
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '$icon',
+                title: '$title',
+                text: '$text',
+                confirmButtonColor: '#0d6efd',
+                confirmButtonText: 'OK',
+                backdrop: false
+            }).then(() => {
+                $redirectJS
+            });
         });
     </script>
     </body>
@@ -28,7 +30,6 @@ function alertAndRedirect($icon, $title, $text, $redirect = null) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate required fields
     if (empty($_POST['subject']) ||  !isset($_FILES['file'])) {
         alertAndRedirect('warning', 'Missing Fields', 'Please fill all required fields.');
     }
@@ -36,32 +37,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = trim($_POST['subject']);
     $file = $_FILES['file'];
 
-
-    // Upload directory
     $upload_dir = "uploads/";
     if(!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true); // Create folder if not exists
+        mkdir($upload_dir, 0777, true); 
     }
 
-    // Check for file upload errors
     if ($file['error'] !== UPLOAD_ERR_OK) {
         alertAndRedirect('error', 'Upload Failed', 'There was an error uploading your file.');
     }
 
-    // Validate file extension
     $allowed_extensions = ['pdf', 'doc', 'docx'];
     $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($file_ext, $allowed_extensions)) {
         alertAndRedirect('error', 'Invalid File Type', 'Only PDF, DOC, and DOCX files are allowed.');
     }
 
-    // Generate unique file name to avoid overwrite
     $unique_name = time() . "_" . basename($file['name']);
     $upload_path = $upload_dir . $unique_name;
 
-    // Try to move uploaded file
     if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-        // Insert into DB with status 'pending'
         $status = "pending";
         $submitted_at = date("Y-m-d H:i:s");
 
@@ -74,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             $stmt->close();
             $connection->close();
-            alertAndRedirect('success', 'Notes Submitted', 'Your Notes has been submitted successfully and is pending approval.', 'upload_notes.html'); // Redirect back or to form page
+            alertAndRedirect('success', 'Notes Submitted', 'Your Notes has been submitted successfully and is pending approval.', 'upload_notes.html'); 
         } else {
             $stmt->close();
             $connection->close();

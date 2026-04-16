@@ -1,5 +1,4 @@
 <?php
-// get_notifications.php
 header('Content-Type: application/json');
 include("config.php");
 

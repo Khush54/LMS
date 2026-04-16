@@ -1,5 +1,4 @@
 <?php
-// get_note_notifications.php
 header('Content-Type: application/json');
 
 include("config.php");
@@ -10,7 +9,6 @@ if ($connection->connect_error) {
     exit;
 }
 
-// Fetch notes with 'pending' status
 $sql = "SELECT id, subject, file_path, uploaded_at FROM notes_requests WHERE status = 'pending' ORDER BY uploaded_at DESC";
 $result = $connection->query($sql);
 

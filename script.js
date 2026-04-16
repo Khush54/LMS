@@ -1,11 +1,25 @@
-function show(id, direction) {
-    const forms = document.querySelectorAll(".box");
-    const box = document.getElementById("flip-box");
+function show(id) {
+    const flipBox = document.getElementById('flip-box');
 
-    forms.forEach(form => form.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+    if (id === 'admin-login') {
+        flipBox.classList.add('is-flipped');
+    } else {
+        flipBox.classList.remove('is-flipped');
+    }
+}
 
-    box.classList.remove("flip-horizontal", "flip-vertical");
-    if (direction === "horizontal") box.classList.add("flip-horizontal");
-    else if (direction === "vertical") box.classList.add("flip-vertical");
+function fillStudent() {
+    const userInput = document.getElementById('s-user');
+    const passInput = document.getElementById('s-pass');
+    
+    userInput.value = "aman@gmail.com";
+    passInput.value = "pass123";
+}
+
+function fillAdmin() {
+    const userInput = document.getElementById('a-user');
+    const passInput = document.getElementById('a-pass');
+    
+    userInput.value = "admin@lms.com";
+    passInput.value = "admin123";
 }

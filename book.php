@@ -1,17 +1,12 @@
 <?php
 session_start();
 
-// (Optional) Check if admin is logged in
 if (!isset($_SESSION['admin_name'])) {
     echo "<script>alert('Please login first!'); window.location.href='index.html';</script>";
     exit();
 }
 
-// connectionect to MySQL
 include("config.php");
-
-
-// Collect form data
 $title        = $_POST['book-title'];
 $author       = $_POST['author-name'];
 $publisher    = $_POST['publisher'];
@@ -20,7 +15,6 @@ $category     = $_POST['category'];
 $copies       = $_POST['copies'];
 $publish_date = $_POST['publish-date'];
 
-// Insert using prepared statement
 $sql = "INSERT INTO books (title, author, publisher, isbn, category, copies, publish_date) 
         VALUES (?, ?, ?, ?, ?, ?, ?)";
 

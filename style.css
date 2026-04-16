@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -12,120 +12,135 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
-    color: rgb(48, 48, 48);
+    padding: 20px; 
+    background: linear-gradient(135deg, #afc47d 0%, #7fa784 100%);
+    color: #2d3436;
+    overflow-x: hidden;
 }
 
 .container {
     width: 100%;
-    max-width: 450px;
-    perspective: 1500px; 
-    overflow: hidden;
-    position: relative;
+    max-width: 420px;
+    perspective: 1500px;
 }
 
 .flip-box {
     position: relative;
     width: 100%;
-    
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip-box.is-flipped {
+    transform: rotateY(180deg);
 }
 
 .box {
-    position: absolute;
     width: 100%;
     background: #fff;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     backface-visibility: hidden;
-    opacity: 0;
-    transform: rotateY(180deg);
-    transition: transform 2s ease-in-out,opacity 2s ease-in-out;
-    transform-style: preserve-3d;
-    transform-origin: center center;
 }
 
-.box.active {
-    position: relative;
-    opacity: 1;
-    transform: rotateY(0deg);
-    z-index: 1;
-}
-
-.flip-horizontal .box {
+#admin-login {
+    position: absolute;
+    top: 0;
+    left: 0;
     transform: rotateY(180deg);
 }
-.flip-horizontal .box.active {
-    transform: rotateY(0deg);
-}
-
-.flip-vertical .box {
-    transform: rotateX(180deg);
-}
-.flip-vertical .box.active {
-    transform: rotateX(0deg);
-}
- 
 
 h2 {
-    font-size: 34px;
+    font-size: clamp(22px, 5vw, 28px); 
+    font-weight: 700;
     text-align: center;
     margin-bottom: 25px;
+    color: #1b4d3e;
 }
 
 input {
     width: 100%;
-    padding: 12px;
-    background: rgb(244, 238, 238);
-    border-radius: 6px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
     outline: none;
-    border: none;
-    font-size: 16px;
-    color: rgb(48, 48, 48);
-    margin-bottom: 22px;
+    border: 1px solid #e0e0e0;
+    font-size: 15px;
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #27ae60;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.1);
 }
 
 button {
     width: 100%;
-    padding: 12px;
-    background: rgb(151, 60, 236);
-    border-radius: 6px;
+    padding: 14px;
+    background: #27ae60;
+    border-radius: 100px;
     border: none;
     cursor: pointer;
-    font-size: 17px;
+    font-size: 16px;
     color: white;
-    font-weight: 500;
-    margin-bottom: 22px;
-    transition: 0.5s;
+    font-weight: 600;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    background: rgb(115, 48, 178);
+    background: #219150;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+}
+
+.demo-btn {
+    background: transparent;
+    border: 2px solid #27ae60;
+    color: #27ae60;
+}
+
+.demo-btn:hover {
+    background: #27ae60;
+    color: #fff;
 }
 
 p {
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
-    margin-bottom: 12px;
+    margin-top: 10px;
+    color: #636e72;
 }
 
 p a {
-    color: rgb(151, 60, 236);
+    color: #27ae60;
     text-decoration: none;
+    font-weight: 600;
 }
 
-p a:hover {
-    text-decoration: underline;
-}
-
-
-@media (max-width: 500px) {
-    .container {
-        max-width: 90%;
-        height: auto;
-    }
+@media (max-width: 480px) {
     .box {
-        height: auto;
-        padding: 25px 20px;
+        padding: 30px 20px; 
+        border-radius: 15px;
+    }
+    
+    .container {
+        max-width: 100%; 
+    }
+
+    input, button {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 600px) {
+    body {
+        align-items: flex-start; 
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 }

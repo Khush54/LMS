@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-// (Optional) Check if admin is logged in
 if (!isset($_SESSION['admin_name'])) {
     echo "
     <html>
@@ -24,19 +22,13 @@ if (!isset($_SESSION['admin_name'])) {
     exit();
 }
 
-// DB connectionection
 include("config.php");
-
-
-// Get form values
 $name     = $_POST['student-name'];
 $roll     = $_POST['student-roll'];
 $email    = $_POST['student-email'];
 $course   = $_POST['student-course'];
 $reg_id   = $_POST['reg-id'];
-$password = $_POST['student-password'];  // No hashing here
-
-// Prepare query
+$password = $_POST['student-password'];  
 $sql = "INSERT INTO students (name, roll_number, email, course, reg_id, password) 
         VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -63,13 +55,11 @@ if ($stmt->execute()) {
     </body>
     </html>";
 } else {
-    // Check duplicate entry (email or roll)
     $errorMsg = $stmt->error;
     $alertText = str_contains($errorMsg, "Duplicate entry") 
                  ? 'Roll number or email already exists!' 
                  : 'Error: ' + $errorMsg;
 
-    // Escape the error message for JS safely
     $escapedError = addslashes($alertText);
 
     echo "

@@ -1,8 +1,5 @@
 <?php
 include("config.php");
-
-
-// SweetAlert2 popup function
 function alertAndRedirect($icon, $title, $text, $redirect = 'review_notes.php') {
     echo "
     <html>
@@ -52,215 +49,161 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id'
 }
 
 $pendingRequests = $connection->query("SELECT * FROM notes_requests WHERE status = 'pending' ORDER BY uploaded_at DESC");
-$approvedPYQs = $connection->query("SELECT * FROM notes_requests WHERE status = 'approved' ORDER BY uploaded_at DESC");
+$approvedNotes = $connection->query("SELECT * FROM notes_requests WHERE status = 'approved' ORDER BY uploaded_at DESC");
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="auto">
 <head>
   <meta charset="UTF-8" />
-  <title>Notes Upload Requests & Approved Notes</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Review Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root { --accent-blue: #3d5a80; }
 
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 40px 20px;
-      min-height: 100vh;
-      color: black;
-    }
-    
-    [data-bs-theme="dark"] body {
-      color:rgb(156, 148, 148) !important;
-    }
-   
-    
-    .container {
-      max-width: 850px;
-      margin: 0 auto;
-      padding: 30px 40px;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgb(0 0 0 / 0.1);
+      background-color: transparent;
+      padding: 20px;
     }
 
-    h2.section-title {
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 24px;
-      border-bottom: 3px solid #007bff;
-      padding-bottom: 8px;
-      color: #007bff;
+    .section-header {
+      border-left: 5px solid var(--accent-blue);
+      padding-left: 15px;
+      margin-bottom: 25px;
     }
 
-    .request-card, .pyq-card {
+    .custom-card {
+      background-color: var(--bs-tertiary-bg);
       border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px 25px;
-      margin-bottom: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      transition: transform 0.15s ease-in-out;
-    }
-    .request-card:hover, .pyq-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      border: 1px solid var(--bs-border-color);
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
 
-    .request-info, .pyq-info {
-      max-width: 60%;
-      min-width: 200px;
-    }
+    .card-body { padding: 1.5rem; }
 
-    .request-info p, .pyq-info p {
-      margin: 6px 0;
-      font-size: 1rem;
-       color: inherit;
-    }
-
-    a.file-link {
-      color: #007bff;
+    .subject-title {
       font-weight: 600;
-      text-decoration: none;
-      transition: color 0.2s ease-in-out;
-    }
-    a.file-link:hover {
-      color: #0056b3;
-      text-decoration: underline;
+      font-size: 1.1rem;
+      color: var(--bs-emphasis-color);
+      word-break: break-word;
     }
 
-    form.action-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      flex-grow: 1;
-      justify-content: flex-end;
-      min-width: 120px;
-    }
-
-    button.btn-approve {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 7px;
+    .btn-action {
       font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-      flex: 1 1 auto;
-      min-width: 100px;
-    }
-    button.btn-approve:hover {
-      background-color: #218838;
-    }
-
-    button.btn-reject {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 7px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-      flex: 1 1 auto;
-      min-width: 100px;
-    }
-    button.btn-reject:hover {
-      background-color: #c82333;
-    }
-
-    a.btn-download {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 22px;
+      font-size: 0.85rem;
+      padding: 8px 16px;
       border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background-color 0.25s ease-in-out;
-      min-width: 130px;
-      text-align: center;
-      display: inline-block;
-    }
-    a.btn-download:hover {
-      background-color: #0056b3;
-      color: white;
+      transition: 0.3s;
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      .request-info, .pyq-info {
-        max-width: 100%;
+    @media (min-width: 769px) {
+      .card-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
-      form.action-buttons {
-        justify-content: center;
-        gap: 12px;
+      .action-container {
+        display: flex;
+        gap: 10px;
       }
-      button.btn-approve, button.btn-reject {
-        min-width: unset;
-        flex-grow: 1;
+      .btn-action { width: auto; min-width: 120px; }
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .card-body { padding: 1rem; }
+      .card-row { text-align: center; }
+      .info-area { margin-bottom: 15px; }
+      .action-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
       }
-      a.btn-download {
-        min-width: unset;
-        padding: 10px 16px;
-      }
+      .btn-action { width: 100%; }
+      .subject-title { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-
-    <h2 class="section-title">Pending Notes Upload Requests</h2>
+  <div class="container py-2">
+    
+    <div class="section-header">
+      <h3 class="fw-bold mb-0 text-primary">Pending Notes Requests</h3>
+      <p class="text-muted small">Verify and publish student notes</p>
+    </div>
 
     <?php if ($pendingRequests && $pendingRequests->num_rows > 0): ?>
       <?php while ($row = $pendingRequests->fetch_assoc()): ?>
-        <div class="request-card">
-          <div class="request-info">
-            <p><strong>Subject:</strong> <?= htmlspecialchars($row['subject']) ?></p>
-            <p><a href="<?= htmlspecialchars($row['file_path']) ?>" target="_blank" class="file-link" rel="noopener noreferrer">View Uploaded File</a></p>
+        <div class="custom-card shadow-sm">
+          <div class="card-body">
+            <div class="card-row">
+              <div class="info-area">
+                <span class="subject-title text-uppercase d-block mb-1"><?= htmlspecialchars($row['subject']) ?></span>
+                <a href="<?= htmlspecialchars($row['file_path']) ?>" target="_blank" class="text-decoration-none small fw-bold" style="color: var(--accent-blue);">
+                  <i class="bi bi-file-earmark-pdf-fill me-1"></i> Preview Notes
+                </a>
+              </div>
+              
+              <form method="POST" class="action-container">
+                <input type="hidden" name="id" value="<?= intval($row['id']) ?>">
+                <button type="submit" name="action" value="approve" class="btn btn-success btn-action shadow-sm">
+                   <i class="bi bi-check-circle"></i> Approve
+                </button>
+                <button type="submit" name="action" value="reject" class="btn btn-danger btn-action shadow-sm">
+                   <i class="bi bi-x-circle"></i> Reject
+                </button>
+              </form>
+            </div>
           </div>
-
-          <form method="POST" class="action-buttons">
-            <input type="hidden" name="id" value="<?= intval($row['id']) ?>">
-            <button type="submit" name="action" value="approve" class="btn-approve">✅ Approve</button>
-            <button type="submit" name="action" value="reject" class="btn-reject">❌ Reject</button>
-          </form>
         </div>
       <?php endwhile; ?>
     <?php else: ?>
-      <p>No pending requests at the moment.</p>
+      <div class="alert alert-info border-0 shadow-sm">No pending notes at the moment.</div>
     <?php endif; ?>
 
-    <hr style="margin: 40px 0 32px 0; border-color: #007bff;">
+    <hr class="my-5 opacity-25">
 
-    <h2 class="section-title">Approved Notes</h2>
+    <div class="section-header">
+      <h3 class="fw-bold mb-0 text-success">Approved Notes</h3>
+    </div>
 
-    <?php if ($approvedPYQs && $approvedPYQs->num_rows > 0): ?>
-      <?php while ($pyq = $approvedPYQs->fetch_assoc()): ?>
-        <div class="pyq-card">
-          <div class="pyq-info">
-            <p><strong>Subject:</strong> <?= htmlspecialchars($pyq['subject']) ?></p>
+    <div class="row g-3">
+    <?php if ($approvedNotes && $approvedNotes->num_rows > 0): ?>
+      <?php while ($note = $approvedNotes->fetch_assoc()): ?>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="custom-card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between text-center text-md-start">
+              <div class="mb-3">
+                <span class="subject-title d-block mb-2"><?= htmlspecialchars($note['subject']) ?></span>
+                <p class="text-muted small">Publicly accessible.</p>
+              </div>
+              <a href="<?= htmlspecialchars($note['file_path']) ?>" download class="btn btn-primary btn-action w-100 mt-auto" style="background-color: var(--accent-blue); border:none;">
+                <i class="bi bi-cloud-arrow-down-fill me-1"></i> Download
+              </a>
+            </div>
           </div>
-          <a href="<?= htmlspecialchars($pyq['file_path']) ?>" download class="btn-download" target="_blank" rel="noopener noreferrer">⬇️ Download</a>
         </div>
       <?php endwhile; ?>
     <?php else: ?>
-      <p>No approved Notes found.</p>
+      <div class="col-12">
+        <div class="alert alert-secondary border-0 shadow-sm">No approved notes found.</div>
+      </div>
     <?php endif; ?>
+    </div>
 
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 <?php $connection->close(); ?>
-
-

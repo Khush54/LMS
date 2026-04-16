@@ -1,9 +1,6 @@
 <?php
-// connectionect to DB (change your credentials here)
 include("config.php");
 
-
-// Function to show SweetAlert2 popup and redirect back or elsewhere
 function alertAndRedirect($icon, $title, $text, $redirect = null) {
     $redirectJS = $redirect ? "window.location.href = '$redirect';" : "window.history.back();";
     echo "
@@ -29,7 +26,6 @@ function alertAndRedirect($icon, $title, $text, $redirect = null) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate required fields
     if (empty($_POST['subject']) || empty($_POST['year']) || !isset($_FILES['file'])) {
         alertAndRedirect('warning', 'Missing Fields', 'Please fill all required fields.');
     }
@@ -38,36 +34,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $year = trim($_POST['year']);
     $file = $_FILES['file'];
 
-    // Validate year format (optional: e.g., 4 digit year)
     if (!preg_match('/^\d{4}$/', $year)) {
         alertAndRedirect('error', 'Invalid Year', 'Please enter a valid 4-digit year.');
     }
 
-    // Upload directory
     $upload_dir = "uploads/";
     if(!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true); // Create folder if not exists
+        mkdir($upload_dir, 0777, true); 
     }
 
-    // Check for file upload errors
     if ($file['error'] !== UPLOAD_ERR_OK) {
         alertAndRedirect('error', 'Upload Failed', 'There was an error uploading your file.');
     }
 
-    // Validate file extension
     $allowed_extensions = ['pdf', 'doc', 'docx'];
     $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($file_ext, $allowed_extensions)) {
         alertAndRedirect('error', 'Invalid File Type', 'Only PDF, DOC, and DOCX files are allowed.');
     }
 
-    // Generate unique file name to avoid overwrite
     $unique_name = time() . "_" . basename($file['name']);
     $upload_path = $upload_dir . $unique_name;
 
-    // Try to move uploaded file
     if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-        // Insert into DB with status 'pending'
         $status = "pending";
         $submitted_at = date("Y-m-d H:i:s");
 
@@ -80,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             $stmt->close();
             $connection->close();
-            alertAndRedirect('success', 'PYQ Submitted', 'Your PYQ has been submitted successfully and is pending approval.', 'upload_pyq.html'); // Redirect back or to form page
+            alertAndRedirect('success', 'PYQ Submitted', 'Your PYQ has been submitted successfully and is pending approval.', 'upload_pyq.html'); 
         } else {
             $stmt->close();
             $connection->close();

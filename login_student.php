@@ -1,29 +1,32 @@
 <?php
 session_start();
-
-// DB connectionection
 include("config.php");
 
-
 if (isset($_POST['student-login'])) {
-    $username = $_POST['student-username'];
-    $password = $_POST['student-password'];
 
-    // Prepare statement to avoid SQL injection
-    $sql = "SELECT * FROM students WHERE name = ? OR email = ?";
+    $username = trim($_POST['student-username']);
+    $password = trim($_POST['student-password']);
+    $sql = "SELECT * FROM students WHERE email = ? OR roll_number = ?";
     $stmt = $connection->prepare($sql);
+
+    if (!$stmt) {
+        die("Query Failed: " . $connection->error);
+    }
+
     $stmt->bind_param("ss", $username, $username);
     $stmt->execute();
+
     $result = $stmt->get_result();
 
-    if ($result->num_rows == 1) {
-        $student = $result->fetch_assoc();
+    if ($result->num_rows === 1) {
 
-        // Since password is stored plain, compare directly
+        $student = $result->fetch_assoc();
         if ($password === $student['password']) {
-            // Login success, set session variables
+
+            $_SESSION['student_id'] = $student['id'];
             $_SESSION['student_name'] = $student['name'];
-            $_SESSION['student_id'] = $student['id']; // or any unique ID
+            $_SESSION['student_email'] = $student['email'];
+            $_SESSION['student_course'] = $student['course'];
 
             echo "
             <html>
@@ -32,22 +35,22 @@ if (isset($_POST['student-login'])) {
             </head>
             <body>
             <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Successful!',
-                text: 'Welcome, " . addslashes($student['name']) . "',
-                confirmButtonText: 'OK',
-                backdrop: false
-            }).then(() => {
-                window.location.href = 'user_home.php';
-            });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Successful 🎉',
+                    text: 'Welcome, " . addslashes($student['name']) . "!',
+                    confirmButtonText: 'Continue'
+                }).then(() => {
+                    window.location.href = 'user_home.php';
+                });
             </script>
             </body>
             </html>
             ";
             exit();
+
         } else {
-            // Wrong password
+
             echo "
             <html>
             <head>
@@ -55,23 +58,23 @@ if (isset($_POST['student-login'])) {
             </head>
             <body>
             <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Incorrect Password!',
-                text: 'Please try again.',
-                confirmButtonText: 'OK',
-                backdrop: false
-            }).then(() => {
-                window.location.href = 'index.html';
-            });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Wrong Password ❌',
+                    text: 'Please enter the correct password.',
+                    confirmButtonText: 'Try Again'
+                }).then(() => {
+                    window.location.href = 'index.html';
+                });
             </script>
             </body>
             </html>
             ";
             exit();
         }
+
     } else {
-        // Username/email not found
+
         echo "
         <html>
         <head>
@@ -79,15 +82,14 @@ if (isset($_POST['student-login'])) {
         </head>
         <body>
         <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'User Not Found!',
-            text: 'No user matches this name or email.',
-            confirmButtonText: 'OK',
-            backdrop: false
-        }).then(() => {
-            window.location.href = 'index.html';
-        });
+            Swal.fire({
+                icon: 'warning',
+                title: 'User Not Found ⚠️',
+                text: 'No account found with this Email or Roll Number.',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = 'index.html';
+            });
         </script>
         </body>
         </html>

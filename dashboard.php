@@ -1,39 +1,18 @@
 <?php
-// Database connection
+
 include("config.php");
 
-
-// Fetch counts from the database
-
-// 1. Total Books (assuming table name is 'books')
 $result = $connection->query("SELECT COUNT(*) as total FROM books");
 $totalBooks = $result->fetch_assoc()['total'] ?? 0;
 
-// 2. Issued Books (currently issued, i.e. in issued_books table)
 $result = $connection->query("SELECT COUNT(*) as total FROM issued_books");
 $issuedBooks = $result->fetch_assoc()['total'] ?? 0;
 
-// 3. Returned Books (count from returned_books table)
 $result = $connection->query("SELECT COUNT(*) as total FROM returned_books");
 $returnedBooks = $result->fetch_assoc()['total'] ?? 0;
 
-// 4. Total Students (assuming table name is 'students')
 $result = $connection->query("SELECT COUNT(*) as total FROM students");
 $totalStudents = $result->fetch_assoc()['total'] ?? 0;
-
-// 5. Late Returns (returned books where actual_return_date > return_date in issued_books before deletion)
-// Since you delete issued_books after return, you need to keep return_date in returned_books or compare dates in returned_books
-// Assuming returned_books has return_date and actual_return_date
-$result = $connection->query("
-  SELECT COUNT(*) as total 
-  FROM returned_books r
-  JOIN issued_books i 
-    ON r.student_id = i.student_id 
-    AND r.book_id = i.book_id
-  WHERE r.actual_return_date > i.return_date
-");
-$lateReturns = $result->fetch_assoc()['total'] ?? 0;
-
 
 $connection->close();
 ?>
@@ -145,19 +124,6 @@ $connection->close();
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6">
-        <div class="dashboard-card p-3 bg-danger-subtle">
-          <div class="d-flex align-items-center gap-3">
-            <div class="icon-circle bg-danger text-white">⏰</div>
-            <div>
-              <h5 class="mb-1 fw-semibold text-danger">Late Returns</h5>
-              <h4 class="mb-0 text-body"><?= $lateReturns ?></h4>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
     </div>
   </div>
 

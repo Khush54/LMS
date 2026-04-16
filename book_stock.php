@@ -1,8 +1,5 @@
 <?php
-// Database connection
 include("config.php");
-
-
 $result = $connection->query("SELECT * FROM books");
 $books = [];
 while ($row = $result->fetch_assoc()) {

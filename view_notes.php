@@ -1,10 +1,6 @@
 <?php
-
-
 include("config.php");
 
-
-// --- Fetch approved notes ---
 $sql = "SELECT id, subject, file_path FROM notes_requests WHERE status = 'approved'";
 $result = $connection->query($sql);
 ?>
@@ -18,62 +14,142 @@ $result = $connection->query($sql);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      padding-top: 2rem;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    :root {
+      --primary-green: #064e3b;
+      --hover-green: #10b981;
     }
 
-    .table-container {
-      border-radius: 1rem;
-      padding: 2rem;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      padding: 20px 10px;
+    }
+
+    .main-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .text-green {
+      color: var(--primary-green) !important;
+    }
+
+    .custom-card {
+      background-color: var(--bs-tertiary-bg);
+      border-radius: 12px;
+      border-left: 6px solid var(--primary-green);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.2s;
+    }
+
+    .custom-card:hover {
+      transform: translateY(-3px);
     }
 
     .btn-download {
-      border-radius: 0.5rem;
+      background-color: var(--primary-green);
+      color: white;
+      border-radius: 8px;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 500;
+      width: 100%; 
+    }
+
+    .btn-download:hover {
+      background-color: var(--hover-green);
+      color: white;
+    }
+
+    .btn-back {
+      border-color: var(--primary-green);
+      color: var(--primary-green);
+      font-weight: 600;
+    }
+
+    .btn-back:hover {
+      background-color: var(--primary-green);
+      color: white;
+    }
+
+    @media (min-width: 600px) {
+      .custom-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+      }
+      .note-info {
+        flex: 1;
+      }
+      .btn-download {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 300px) {
+      .header-section {
+        justify-content: center;
+        text-align: center;
+      }
+      .custom-card {
+        padding: 10px;
+      }
+      .note-title {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="text-primary fw-bold d-flex align-items-center">
+<div class="container main-wrapper">
+  
+  <div class="header-section">
+    <h3 class="fw-bold text-green mb-0">
       <i class="bi bi-folder2-open me-2"></i> Approved Notes
     </h3>
-    <a href="upload_notes.html" class="btn btn-outline-secondary">
-      <i class="bi bi-arrow-left"></i> Back to Upload
+    <a href="upload_notes.html" class="btn btn-outline-secondary btn-sm btn-back">
+      <i class="bi bi-arrow-left"></i> Back
     </a>
   </div>
 
-  <div class="table-container">
+  <div class="notes-container">
     <?php if ($result->num_rows > 0): ?>
-      <table class="table table-bordered align-middle">
-        <thead class="table">
-          <tr>
-            <th>#</th>
-            <th>Subject</th>
-            <th>Download</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php $i = 1; while($row = $result->fetch_assoc()): ?>
-            <tr>
-              <td><?= $i++ ?></td>
-              <td><?= htmlspecialchars($row['subject']) ?></td>
-              <td>
-                <a href="<?= htmlspecialchars($row['file_path']) ?>" class="btn btn-primary btn-download" download>
-                  <i class="bi bi-download"></i> Download
-                </a>
-              </td>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
+      <?php while($row = $result->fetch_assoc()): ?>
+        <div class="custom-card">
+          <div class="note-info">
+            <div class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Subject</div>
+            <div class="note-title fw-bold mb-3 mb-md-0"><?= htmlspecialchars($row['subject']) ?></div>
+          </div>
+          <div class="note-action">
+            <a href="<?= htmlspecialchars($row['file_path']) ?>" class="btn btn-download shadow-sm" download>
+              <i class="bi bi-cloud-arrow-down-fill me-2"></i> Download
+            </a>
+          </div>
+        </div>
+      <?php endwhile; ?>
     <?php else: ?>
-      <p class="text-muted">No approved notes found.</p>
+      <div class="alert alert-info text-center border-0 shadow-sm">
+        <i class="bi bi-info-circle me-2"></i> No approved notes found yet.
+      </div>
     <?php endif; ?>
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

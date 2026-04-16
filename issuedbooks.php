@@ -1,17 +1,12 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['student_id'])) {
     header("Location: index.html");
     exit();
 }
-
 $userId = intval($_SESSION['student_id']);
-
 include("config.php");
 
-
-// Fetch issued books for the logged-in student
 $sql = "SELECT b.title, b.author, ib.issue_date, ib.return_date
         FROM issued_books ib
         JOIN books b ON ib.book_id = b.id
@@ -20,226 +15,124 @@ $stmt = $connection->prepare($sql);
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
-
-$issuedBooks = [];
-while ($row = $result->fetch_assoc()) {
-    $issuedBooks[] = $row;
-}
-
+$issuedBooks = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $connection->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
+<html lang="en" data-bs-theme="auto"> <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Your Issued Books</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
         body {
             font-family: 'Poppins', sans-serif;
-            color: var(--bs-body-color);
-            padding: 3rem 1rem;
-            min-height: 100vh;
+            padding: 20px 10px;
+            background-color: var(--bs-body-bg); 
         }
 
-        h2 {
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-            color: var(--bs-primary);
-            text-align: center;
-            letter-spacing: 1px;
-        }
-
-        .table-container {
-            max-width: 900px;
+        .books-wrapper {
+            max-width: 800px;
             margin: 0 auto;
-            overflow-x: auto;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-            border-radius: 15px;
-            background-color: var(--bs-body-bg);
-            padding: 1.5rem 1rem;
-            transition: box-shadow 0.3s ease;
+        }
+        
+        .book-card {
+            background-color: var(--bs-tertiary-bg); 
+            color: var(--bs-body-color);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #198754; 
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
         }
 
-        .table-container:hover {
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        .info-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
         }
 
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 16px;
-        }
-
-        thead tr th {
-            border-bottom: 3px solid var(--bs-primary);
-            padding-bottom: 10px;
-            font-weight: 700;
-            color: var(--bs-primary);
-            text-align: left;
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #198754; 
+            font-weight: 600;
             letter-spacing: 0.5px;
         }
 
-        tbody tr {
-            background-color: var(--bs-secondary-bg);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border-radius: 12px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-            cursor: default;
+        .info-value {
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        tbody tr:hover {
-            background-color: var(--bs-primary-bg);
-            color: var(--bs-primary-text);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        .date-badge {
+            background-color: var(--bs-success-border-subtle);
+            color: var(--bs-success-text-emphasis);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            display: inline-block;
         }
 
-        tbody tr td {
-            padding: 14px 18px;
-            vertical-align: middle;
-            border-left: 4px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-
-        tbody tr:hover td {
-            border-left: 4px solid var(--bs-primary);
-        }
-
-        /* Colors for light/dark themes */
-        [data-bs-theme="light"] {
-            --bs-body-color: #212529;
-            --bs-border-color: #dee2e6;
-            --bs-primary: #0d6efd;
-            --bs-primary-bg: #e7f1ff;
-            --bs-primary-text: #0d6efd;
-            --bs-secondary-bg: #f8f9fa;
-        }
-
-        [data-bs-theme="dark"] {
-            --bs-body-color: #e1e1e1;
-            --bs-border-color: #343a40;
-            --bs-primary: #66b2ff;
-            --bs-primary-bg: #1a1a1a;
-            --bs-primary-text: #66b2ff;
-            --bs-secondary-bg: #2a2a2a;
-        }
-
-        /* Responsive for smaller screens */
-        @media (max-width: 576px) {
-            .table-container {
-                padding: 1rem;
-            }
-
-            table thead {
-                display: none;
-            }
-
-            table,
-            tbody,
-            tr,
-            td {
-                display: block;
-                width: 100%;
-            }
-
-            tr {
-                margin-bottom: 1.5rem;
-                border-radius: 15px;
-                background-color: var(--bs-secondary-bg);
-                padding: 1.2rem 1rem;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-                transition: background-color 0.3s ease;
-            }
-
-            tr:hover {
-                background-color: var(--bs-primary-bg);
-                color: var(--bs-primary-text);
-            }
-
-            td {
-                padding-left: 55%;
-                position: relative;
-                text-align: left;
-                border-left: none !important;
-            }
-
-            td::before {
-                position: absolute;
-                left: 1rem;
-                width: 45%;
-                white-space: nowrap;
-                font-weight: 600;
-                content: attr(data-label);
-                color: var(--bs-primary);
+        @media (min-width: 600px) {
+            .book-card {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
             }
         }
 
-        /* Alert styling for no books */
-        .alert-warning {
-            max-width: 500px;
-            margin: 3rem auto;
-            padding: 1.5rem 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-            text-align: center;
-            background-color: #fff3cd;
-            color: #856404;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        [data-bs-theme="dark"] .alert-warning {
-            background-color: #5a4700;
-            color: #ffec99;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.6);
+        .main-heading {
+            color: var(--bs-heading-color); 
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h2>Your Issued Books</h2>
 
-        <?php if (count($issuedBooks) === 0): ?>
-            <div class="alert alert-warning" role="alert">
-                You have no issued books currently.
-            </div>
-        <?php else: ?>
-            <div class="table-container" role="table" aria-label="List of issued books">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Author</th>
-                            <th scope="col">Issue Date</th>
-                            <th scope="col">Return Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($issuedBooks as $book): ?>
-                            <tr>
-                                <td data-label="Title"><?= htmlspecialchars($book['title']) ?></td>
-                                <td data-label="Author"><?= htmlspecialchars($book['author']) ?></td>
-                                <td data-label="Issue Date"><?= htmlspecialchars(date('d M Y', strtotime($book['issue_date']))) ?></td>
-                                <td data-label="Return Date"><?= htmlspecialchars(date('d M Y', strtotime($book['return_date']))) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php endif; ?>
-    </div>
+<div class="container books-wrapper">
+    <h3 class="text-center fw-bold mb-4 main-heading">📚 My Issued Books</h3>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <?php if (empty($issuedBooks)): ?>
+        <div class="alert alert-success text-center">No book has been taken by you.</div>
+    <?php else: ?>
+        <?php foreach ($issuedBooks as $book): ?>
+            <div class="book-card">
+                <div class="info-group">
+                    <span class="info-label">Book Title</span>
+                    <span class="info-value fw-bold"><?= htmlspecialchars($book['title']) ?></span>
+                </div>
+                
+                <div class="info-group">
+                    <span class="info-label">Author</span>
+                    <span class="info-value"><?= htmlspecialchars($book['author']) ?></span>
+                </div>
+
+                <div class="info-group">
+                    <span class="info-label">Issued On</span>
+                    <span class="info-value opacity-75"><?= date('d M Y', strtotime($book['issue_date'])) ?></span>
+                </div>
+
+                <div class="info-group">
+                    <span class="info-label">Return Deadline</span>
+                    <span class="info-value">
+                        <span class="date-badge fw-bold">
+                            <?= date('d M Y', strtotime($book['return_date'])) ?>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
