@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_admin();
 include("config.php");
 function alertAndRedirect($icon, $title, $text, $redirect = 'review_pyq.php') {
     echo "
@@ -24,8 +26,15 @@ function alertAndRedirect($icon, $title, $text, $redirect = 'review_pyq.php') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id'])) {
+    if (is_demo_admin()) {
+        demo_block_message('review_pyq.php');
+    }
     $id = intval($_POST['id']);
     $action = $_POST['action'];
+
+    if (!in_array($action, ['approve', 'reject'])) {
+        alertAndRedirect('error', 'Invalid Action', 'Invalid action specified.');
+    }
     $new_status = ($action === 'approve') ? 'approved' : 'rejected';
 
     $stmt = $connection->prepare("UPDATE pyq_requests SET status = ? WHERE id = ?");

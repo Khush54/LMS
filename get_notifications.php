@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_admin();
 header('Content-Type: application/json');
 include("config.php");
 

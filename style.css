@@ -115,6 +115,12 @@ p {
     color: #636e72;
 }
 
+.mode-note {
+    margin: -12px 0 18px;
+    color: #4b5563;
+    line-height: 1.45;
+}
+
 p a {
     color: #27ae60;
     text-decoration: none;

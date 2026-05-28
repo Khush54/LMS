@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_admin();
 include("config.php");
 function alertAndRedirect($icon, $title, $text, $redirect = 'review_notes.php') {
     echo "
@@ -24,6 +26,9 @@ function alertAndRedirect($icon, $title, $text, $redirect = 'review_notes.php') 
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id'])) {
+    if (is_demo_admin()) {
+        demo_block_message('review_notes.php');
+    }
     $id = intval($_POST['id']);
     $action = $_POST['action'];
 

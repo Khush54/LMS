@@ -149,6 +149,8 @@ $studentName = $_SESSION['student_name'];
       </div>
       <ul class="nav flex-column">
         <li class="nav-item"><a class="nav-link" onclick="loadPage('user_dashboard.php')"><span class="emoji">📊</span>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="loadPage('recommendations.php')"><span class="emoji">★</span>Recommended</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="loadPage('smart_search.php')"><span class="emoji">🔎</span>Smart Search</a></li>
         <li class="nav-item"><a class="nav-link" onclick="loadPage('book_stock.php')"><span class="emoji">📚</span>Book Stock</a></li>
         <li class="nav-item"><a class="nav-link" onclick="loadPage('issuedbooks.php')"><span class="emoji">📤</span>Issued Books</a></li>
         <li class="nav-item"><a class="nav-link" onclick="loadPage('returnedbooks.php')"><span class="emoji">📥</span>Returned Books</a></li>

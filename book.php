@@ -1,11 +1,6 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['admin_name'])) {
-    echo "<script>alert('Please login first!'); window.location.href='index.html';</script>";
-    exit();
-}
-
+require_once("auth.php");
+block_demo_admin('add_book.html');
 include("config.php");
 $title        = $_POST['book-title'];
 $author       = $_POST['author-name'];
@@ -66,5 +61,5 @@ Swal.fire({
 }
 
 $stmt->close();
-$connectionection->close();
+$connection->close();
 ?>

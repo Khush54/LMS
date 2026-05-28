@@ -27,6 +27,7 @@ if (isset($_POST['admin-login'])) {
             $_SESSION['admin_id'] = $row['ID'];
             $_SESSION['admin_name'] = $row['Name'];
             $_SESSION['admin_email'] = $row['Email'];
+            $_SESSION['is_demo_admin'] = strtolower($row['Email']) === 'admin@lms.com';
 
             echo "
             <html>
@@ -41,7 +42,7 @@ if (isset($_POST['admin-login'])) {
                 text: 'Welcome, " . addslashes($row['Name']) . "!',
                 confirmButtonText: 'Continue'
             }).then(() => {
-                window.location.href = 'home.html';
+                window.location.href = 'home.php';
             });
             </script>
             </body>

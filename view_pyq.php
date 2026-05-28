@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_portal_user();
 include("config.php");
 
 $sql = "SELECT id, subject, file_path FROM pyq_requests WHERE status = 'approved'";

@@ -1,9 +1,6 @@
 <?php
-session_start();
-if (!isset($_SESSION['student_id'])) {
-    header("Location: index.html");
-    exit();
-}
+require_once("auth.php");
+require_student();
 $userId = intval($_SESSION['student_id']);
 include("config.php");
 

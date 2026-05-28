@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_student();
 include("config.php");
 
 function alertAndRedirect($icon, $title, $text, $redirect = null) {

@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+block_demo_admin('issue.html');
 include("config.php");
 
 $studentId  = $_POST['studentId'] ?? '';
@@ -29,10 +31,10 @@ if (!$studentId || !$bookId || !$issueDate || !$returnDate) {
     exit;
 }
 
-$query = "INSERT INTO issued_books (student_id, book_id, issue_date, return_date) 
-          VALUES ('$studentId', '$bookId', '$issueDate', '$returnDate')";
+$stmt = $connection->prepare("INSERT INTO issued_books (student_id, book_id, issue_date, return_date) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("iiss", $studentId, $bookId, $issueDate, $returnDate);
 
-if ($connection->query($query) === TRUE) {
+if ($stmt->execute()) {
     echo "
 <html>
 <head>
@@ -63,7 +65,7 @@ Swal.fire({
 Swal.fire({
     icon: 'error',
     title: 'Error Issuing Book!',
-    text: '" . addslashes($connection->error) . "',
+    text: '" . addslashes($stmt->error) . "',
     confirmButtonText: 'Try Again',
     backdrop: false
 }).then(() => {
@@ -74,5 +76,6 @@ Swal.fire({
 </html>";
 }
 
+$stmt->close();
 $connection->close();
 ?>

@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+require_portal_user();
 include("config.php");
 $result = $connection->query("SELECT * FROM books");
 $books = [];

@@ -1,27 +1,6 @@
 <?php
-session_start();
-if (!isset($_SESSION['admin_name'])) {
-    echo "
-    <html>
-    <head>
-        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-    </head>
-    <body>
-    <script>
-        Swal.fire({
-            icon: 'warning',
-            title: 'Please login first as admin!',
-            confirmButtonText: 'OK',
-            backdrop: false
-        }).then(() => {
-            window.location.href = 'index.html';
-        });
-    </script>
-    </body>
-    </html>";
-    exit();
-}
-
+require_once("auth.php");
+block_demo_admin('register.html');
 include("config.php");
 $name     = $_POST['student-name'];
 $roll     = $_POST['student-roll'];
@@ -56,9 +35,9 @@ if ($stmt->execute()) {
     </html>";
 } else {
     $errorMsg = $stmt->error;
-    $alertText = str_contains($errorMsg, "Duplicate entry") 
-                 ? 'Roll number or email already exists!' 
-                 : 'Error: ' + $errorMsg;
+    $alertText = str_contains($errorMsg, "Duplicate entry")
+                 ? 'Roll number or email already exists!'
+                 : 'Error: ' . $errorMsg;
 
     $escapedError = addslashes($alertText);
 

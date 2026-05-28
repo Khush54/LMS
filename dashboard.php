@@ -1,5 +1,6 @@
 <?php
-
+require_once("auth.php");
+require_admin();
 include("config.php");
 
 $result = $connection->query("SELECT COUNT(*) as total FROM books");
@@ -13,6 +14,19 @@ $returnedBooks = $result->fetch_assoc()['total'] ?? 0;
 
 $result = $connection->query("SELECT COUNT(*) as total FROM students");
 $totalStudents = $result->fetch_assoc()['total'] ?? 0;
+
+$result = $connection->query("SELECT COUNT(*) as total FROM notes_requests WHERE status = 'pending'");
+$pendingNotes = $result ? ($result->fetch_assoc()['total'] ?? 0) : 0;
+
+$result = $connection->query("SELECT COUNT(*) as total FROM pyq_requests WHERE status = 'pending'");
+$pendingPYQs = $result ? ($result->fetch_assoc()['total'] ?? 0) : 0;
+
+$result = $connection->query("
+  SELECT COUNT(*) as total
+  FROM issued_books
+  WHERE return_date < CURDATE()
+");
+$overdueBooks = $result ? ($result->fetch_assoc()['total'] ?? 0) : 0;
 
 $connection->close();
 ?>
@@ -119,6 +133,42 @@ $connection->close();
             <div>
               <h5 class="mb-1 fw-semibold text-info">Total Students</h5>
               <h4 class="mb-0 text-body"><?= $totalStudents ?></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="dashboard-card p-3 bg-danger-subtle">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-danger text-white">!</div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-danger">Overdue Books</h5>
+              <h4 class="mb-0 text-body"><?= $overdueBooks ?></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="dashboard-card p-3 bg-secondary-subtle">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-secondary text-white">N</div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-secondary">Pending Notes</h5>
+              <h4 class="mb-0 text-body"><?= $pendingNotes ?></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="dashboard-card p-3 bg-dark-subtle">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-dark text-white">P</div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-dark">Pending PYQs</h5>
+              <h4 class="mb-0 text-body"><?= $pendingPYQs ?></h4>
             </div>
           </div>
         </div>

@@ -1,43 +1,42 @@
-# 📚 Library Management System
+# LibraSPHERE - Smart Academic Library Portal
 
-- A web-based Library Management System (LMS) designed to digitize and simplify traditional library operations.
-- It provides an efficient platform for managing books, student interactions, and academic resources in a structured and user-friendly way.
+A PHP/MySQL library management system that combines physical book circulation with a verified academic resource hub for notes and previous year question papers.
 
-----
+## Live Demo
 
-## 🔗Live Demo 
-👉 https://lms-easy.infinityfreeapp.com/
+https://lms-easy.infinityfreeapp.com/
 
----
+## Demo Access
 
-## ✨ Standout Features
-- Admin & Student Panels :Separate dashboards for administrators and students to manage and access resources efficiently.
-- Book Management System: Add, update, delete, and track availability of books.
-- Student Access: Students can browse books, request issues, and manage their activity.
-- Academic Resources: Upload and manage notes and previous year questions (PYQs).
-- Authentication & Security: Secure login system using PHP sessions and input validation.
-- Responsive UI: Clean and mobile-friendly interface using Bootstrap.
----
+Student demo:
+- Email: `aman@gmail.com`
+- Password: `pass123`
 
-## 🛠 Tech Stack
+Admin demo:
+- Email: `admin@lms.com`
+- Password: `admin123`
+- Public admin access is read-only. Editing actions are disabled to protect live data.
 
-- Frontend: 	HTML5, CSS3, JS, Bootstrap 5 (responsive magic)
-- Backend: 	PHP (secure server logic)
-- Database: 	MySQL (7 normalized tables for scalability)
-- Dev Tools: 	XAMPP, VS Code, phpMyAdmin
-- Deployment: Infinity Free App
+## Standout Features
 
----
+- Role-based Admin and Student portals
+- Read-only public demo mode for safe reviewer access
+- Smart Search across books, approved notes, and PYQs
+- Student recommendations based on course and borrowing history
+- Admin analytics for most issued books, category coverage, overdue books, and resource pipeline
+- Book issue/return tracking with overdue visibility
+- Notes and PYQ upload workflow with admin approval
+- Responsive Bootstrap interface with dark/light mode
 
+## Tech Stack
 
-## 🌟 Epic Future Upgrades
-- Barcode/RFID Scanning for instant check-ins 
-- SMS/Email Alerts for due dates & fines 
-- Analytics Dashboard – track most-borrowed books & trends 
-- Multi-Library Support for campus-wide networks 
+- Frontend: HTML5, CSS3, JavaScript, Bootstrap 5
+- Backend: PHP
+- Database: MySQL
+- Tools: XAMPP, phpMyAdmin, VS Code
+- Deployment: InfinityFree
 
----
+## Co-Authored By
 
-## Co-Authored By:
 - Sahid Alam (https://github.com/Sahid934)
 - Khushpreet Kaur (https://github.com/Khush54)

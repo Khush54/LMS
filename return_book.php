@@ -1,4 +1,6 @@
 <?php
+require_once("auth.php");
+block_demo_admin('return.html');
 include("config.php");
 $studentId = $_POST['studentId'] ?? '';
 $bookId = $_POST['bookId'] ?? '';
