@@ -1076,12 +1076,6 @@ Building LibraSPHERE taught us:
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License** — you are free to use, modify, and distribute it with attribution.
-
----
-
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!
